@@ -1,10 +1,13 @@
-baseURL = "https://example.com"
+baseURL = "/"
 languageCode = "en-us"
 defaultContentLanguage = "en"
-title = "Cupper"
+title = "Sol's Blog"
 theme = "cupper-hugo-theme"
 googleAnalytics = "UA-123456789-1"
 disqusShortname = "yourdiscussshortname"
+
+# ignore certain files as recommended
+ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 
 [taxonomies]
   tag = "tags"
