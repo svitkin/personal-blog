@@ -19,8 +19,8 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
   quality = 99
 
 [params]
-  description = "An accessibility-friendly Hugo theme, ported from the [original Cupper](https://github.com/ThePacielloGroup/cupper) project."
-  homeMetaContent = "An accessibility-friendly Hugo theme, ported from the original Cupper project."
+  description = "A personal blog about stuff!"
+  homeMetaContent = "A personal blog about stuff!"
   footer = "Made with [Hugo](https://gohugo.io/). Themed by [Cupper](https://github.com/zwbetz-gh/cupper-hugo-theme). Deployed to [Netlify](https://www.netlify.com/)."
   # For more date formats see https://gohugo.io/functions/format/
   dateFormat = "Jan 2, 2006"
