@@ -28,7 +28,7 @@ tags:
 ## The network
 NBA trades are a deep, strange rabbit hole to jump into. Their history shows exchanges between teams that don't exist anymore for players that even the most ardent fans have never heard of. Tales of woe reveal themselves in their records - star players earnestly exchanged for players history has forgotten, a future pick that would turn into a centerpiece bouncing around so many teams that missed out. Some truly bizarre decision-making begins to stand out. 
 
-The rabbit hole gets deeper than just a single trade though. A player's arrival on a team can be traced back considerably further than their last immediate exchange. Viewing trades between players as a continuous set of connections, we can trace how **player a** "becomes" **player d** by checking out how a trade between **player a** and **player b** connects to a trade later on between **player b** and **player c**, which in turn connects to another trade later between **player c** and **player d**. Let's ground this in an example with real players (the year of each trade is in parantheses).
+The rabbit hole gets deeper than just a single trade though. A player's arrival on a team can be traced back considerably further than their last immediate exchange. Viewing trades between players as a continuous set of connections, you can trace how **player a** "becomes" **player d** by checking out how a trade between **player a** and **player b** connects to a trade later on between **player b** and **player c**, which in turn connects to another trade later between **player c** and **player d**. Let's ground this in an example with real players (the year of each trade is in parantheses).
 
 Vince Carter &rarr; Eric Williams (2004) &rarr; Radoslav Nesterovic (2006) &rarr; Jermaine O'Neal (2008) &rarr; Shawn Marion (2009) &rarr; Hedo Turkoglu (2009) &rarr; Leandro Barbosa (2010) &rarr; Tomislav Zubcic as a 2012 second round pick (2012) &rarr; Luke Ridnour (2015)
 
@@ -36,9 +36,9 @@ This can be read as *Vince Carter is exchanged in a trade for Eric Williams in 2
 
 
 ## The scrape
-Yes. The wonderful folks at the <a href="http://prosportstransactions.com/" target="_blank">Pro Sports Transactions Database</a> have comprehensive data on all professional basketball trades dating back to 1937. We are going to narrow our scope to all trades since the NBA-ABA merger (November 16, 1976). With the help of R (in particular the *rvest* package), we can scrape data from their website and use it to build our trade network. Further details and important caveats associated with the scraping are in the [Appendix](#appendix) for those interested.
+Yes. The wonderful folks at the <a href="http://prosportstransactions.com/" target="_blank">Pro Sports Transactions Database</a> have comprehensive data on all professional basketball trades dating back to 1937. The scope of this analysis is limited to all trades since the NBA-ABA merger (November 16, 1976). With the help of R (in particular the *rvest* package), data is scraped from their website and use it to build a trade network. Further details and important caveats associated with the scraping are in the [Appendix](#appendix) for those interested.
 
-Additionally, for some later analyses we scrape player data, again since the NBA-ABA merger, from the equally amazing <a href="http://basketball-reference.com/" target="_blank">Basketball Reference</a>.
+For some later analyses, player statistics data is scraped, again since the NBA-ABA merger, from the equally amazing <a href="http://basketball-reference.com/" target="_blank">Basketball Reference</a>.
 
 ## The visualizations
 
@@ -52,7 +52,7 @@ Check out those Vince Carter to Luke Ridnour connections again:
 Briefly contemplate this bizarre Lebron James and Luke Walton (his current coach) trade relationship:
 
 
-![Lebron James - Luke Walton connections](../post/bball-network-post/lebronjames-lukewalton.png)
+![](../post/bball-network-post/lebronjames-lukewalton.png "Lebron James - Luke Ridnour Connection")
 
 
 Indulge my obsession with Eric Bledsoe, and check out connections with anyone who is related to his trades:
@@ -61,14 +61,14 @@ Indulge my obsession with Eric Bledsoe, and check out connections with anyone wh
   <source src="../post/bball-network-post/ericbledsoe.mp4" type="video/mp4">
 </video>
 
-In the actual application, you can check out details of each trade by hovering over connections between players for a descriptive tooltip. Details on how paths in the trade network are created can be found in the [Appendix](#appendix).
+In the application, you can find more details of each trade by hovering over connections between players. Details on how paths in the trade network are created can be found in the [Appendix](#appendix).
 
 ## The forrests
-We can leverage properties of networks and our scraped player data from <a href="http://basketball-reference.com/" target="_blank">Basketball Reference</a> to dig a bit deeper. In the article that inspired this whole plunge (**insert article reference**), the author describes a player as a Forrest Gump of trades. Someone involved in all these historic, landscape changing exchanges who no one has actually heard of or seen play much. Most likely getting moved around as part of the labyrinthian calculations front offices make to work within the salary cap. 
+We can leverage properties of networks and our scraped player data from <a href="http://basketball-reference.com/" target="_blank">Basketball Reference</a> to dig a bit deeper. In the <a href="https://www.theringer.com/nba/2019/1/30/18202947/nba-transaction-trees" target="_blank">article</a> that inspired this whole plunge, the author describes the player Arturas Gudaitis as a Forrest Gump of trades. Someone involved in all these historic, landscape changing exchanges who no one has actually heard of or seen play much (in Gudaitis's case, not at all). Players moved around as part of the labyrinthian calculations front offices make to work within the salary cap. 
 
-How can we find these Forrest Gumps? One way is to look at the ratio of minutes played per game for a player compared to the number of trades they were involved in, the idea being we would identify players who don't play very much but get traded quite a bit. A few data-related difficulties arise in any analysis connecting using both our network and player data unfortunately. To connect the player trade data with the player statistics data, we need to match by names. Unfortunately, we cannot find a match for 362 out of the 2,257 players (16%) in our network. Additionally players with 0 minutes played are not in our player statistics data and therefore not matched with our network. For our simple average minutes per career statistic, players' minutes are aggregated as a weighted average of the minutes played per game, for a team in a season, and the number of games played for that team in that season.
+How can we find these Forrest Gumps? One way is to look at the ratio of minutes played per game for a player compared to the number of trades they were involved in, the idea being to identify players who don't play very much but get traded quite a bit. However, a few data-related difficulties arise in any analysis connecting the network and player data unfortunately. To connect the player trade data with the player statistics data, the datasets are matched by names. Unfortunately, no match is found for 362 out of the 2,257 players (16%) in the network. Additionally players with 0 minutes played (like Arturas Gudaitis) are not in the player statistics data and therefore not matched with the network. For the simple average minutes per career statistic, players' minutes are aggregated as a weighted average of the minutes played per game, for a team in a season, and the number of games played for that team in that season.
 
-With all that in mind we present players since the NBA-ABA merger who played the least and got traded the most (relatively) for the three categories of positions - guard, forward, center. Players can obviously change position over time, so to (possibly over)simplify things we pick the first recorded position of the player in the data.
+With all that in mind here are the players since the NBA-ABA merger who played the least and got traded the most (relatively) for the three categories of positions - guard, forward, center. Players can obviously change position over time, so to (possibly over)simplify things the first recorded position of the player in the data is used.
 
 
 ``` {r echo=FALSE}
@@ -76,7 +76,9 @@ library(DT)
 datatable(read.csv("../../static/post/bball-network-post/mpg_trade_5.csv"),
           rownames = FALSE,
           colnames = c("Player", "Position", "MPG over Career", "# of Trades", "# of Trades/MPG"),
-          filter = "top")
+          filter = "top",
+          options = list(pageLength = 15),
+          caption = "Lowest 5 MPG to Trades Ratios per Position")
 ```
 
 
@@ -85,8 +87,26 @@ datatable(read.csv("../../static/post/bball-network-post/mpg_trade_5.csv"),
 ### Scraping
 Choices made when scraping from <a href="http://prosportstransactions.com/" target="_blank">Pro Sports Transactions Database</a>:
 
-* choice 1 
-* choice 2
+* Remove exchanges with future picks
+* Remove exchanges with non-agreements or non-exercised picks
+* Remove exchanges with unknown picks or unknown offer sheets
+* Remove exchanges where agreement to waive was involved
+* Remove exchanges where modification of pick was involved
+* When discrepancy with media guide pointed out, use information in dataset
 
 ### Path creation
-Describe bfs and your modification to it.
+The original data scraped from the <a href="http://prosportstransactions.com/" target="_blank">Pro Sports Transactions Database</a>, is a network of players where a connection exists if two players were exchanged in a trade at some point in time. However, to create the visualizations from the application, time and team must be taken into account. A path between any two players must have sequential connections involving the same teams and must uniformly go forward or backward in time. 
+
+Invalid date path:
+player a &rarr; player b (2015) &rarr; player c (2014)
+
+Valid date path:
+player a &rarr; player b (2015) &rarr; player c (2016)
+
+Invalid team path:
+player a &rarr; player b (between Magic and Rockets) &rarr; player c (between Pacers and Knicks)
+
+Valid team path:
+player a &rarr; player b (between Magic and Rockets) &rarr; player c (between Rockets and Knicks)
+
+Both team and time need to be correct for a path to be valid. To find valid paths, a <a href="https://en.wikipedia.org/wiki/Breadth-first_search" target="_blank">breadth first search</a> is used, where each connection being searched along the network is tested for date and team validity. 
