@@ -1,0 +1,92 @@
+---
+title: On NBA Trades
+author: ''
+date: '2019-03-27'
+slug: on-nba-trades
+categories: []
+tags:
+  - nba
+  - basketball
+  - network
+  - visualization
+  - shiny
+  - R
+---
+
+---
+title: My test post
+author: Sol Vitkin
+date: '2019-03-19'
+slug: my-test-post
+categories:
+  - test
+tags:
+  - demo
+---
+
+
+## The network
+NBA trades are a deep, strange rabbit hole to jump into. Their history shows exchanges between teams that don't exist anymore for players that even the most ardent fans have never heard of. Tales of woe reveal themselves in their records - star players earnestly exchanged for players history has forgotten, a future pick that would turn into a centerpiece bouncing around so many teams that missed out. Some truly bizarre decision-making begins to stand out. 
+
+The rabbit hole gets deeper than just a single trade though. A player's arrival on a team can be traced back considerably further than their last immediate exchange. Viewing trades between players as a continuous set of connections, we can trace how **player a** "becomes" **player d** by checking out how a trade between **player a** and **player b** connects to a trade later on between **player b** and **player c**, which in turn connects to another trade later between **player c** and **player d**. Let's ground this in an example with real players (the year of each trade is in parantheses).
+
+Vince Carter &rarr; Eric Williams (2004) &rarr; Radoslav Nesterovic (2006) &rarr; Jermaine O'Neal (2008) &rarr; Shawn Marion (2009) &rarr; Hedo Turkoglu (2009) &rarr; Leandro Barbosa (2010) &rarr; Tomislav Zubcic as a 2012 second round pick (2012) &rarr; Luke Ridnour (2015)
+
+This can be read as *Vince Carter is exchanged in a trade for Eric Williams in 2004, who is then exchanged for Radoslav Nesterovic in a trade in 2006, etc.* Here we have just one of the ways a trade involving Vince Carter connects to Luke Ridnour arriving to the Raptors years later. A series of connections that tells a long, strange story of front office decisions and shifting career paths. But can we find these types of connections for any player? 
+
+
+## The scrape
+Yes. The wonderful folks at the <a href="http://prosportstransactions.com/" target="_blank">Pro Sports Transactions Database</a> have comprehensive data on all professional basketball trades dating back to 1937. We are going to narrow our scope to all trades since the NBA-ABA merger (November 16, 1976). With the help of R (in particular the *rvest* package), we can scrape data from their website and use it to build our trade network. Further details and important caveats associated with the scraping are in the [Appendix](#appendix) for those interested.
+
+Additionally, for some later analyses we scrape player data, again since the NBA-ABA merger, from the equally amazing <a href="http://basketball-reference.com/" target="_blank">Basketball Reference</a>.
+
+## The visualizations
+
+The resulting network can be poked, prodded, and visualized in the application created at <a href="http://svitkin.shinyapps.io/bball-trade-network/" target="_blank">svitkin.shinyapps.io/bball-trade-network/</a>. In the app, you can see trades evolve over time, and even how players get drafted into the league, or go in and out of free agency. Let's get on with some examples!
+Check out those Vince Carter to Luke Ridnour connections again:
+
+<video width="640" height="480" style="display:block; margin: 0 auto;" controls>
+  <source src="../post/bball-network-post/vincecarter-lukeridnour.mp4" type="video/mp4">
+</video>
+
+Briefly contemplate this bizarre Lebron James and Luke Walton (his current coach) trade relationship:
+
+
+![Lebron James - Luke Walton connections](../post/bball-network-post/lebronjames-lukewalton.png)
+
+
+Indulge my obsession with Eric Bledsoe, and check out connections with anyone who is related to his trades:
+
+<video width="640" height="480" style="display:block; margin: 0 auto;" controls>
+  <source src="../post/bball-network-post/ericbledsoe.mp4" type="video/mp4">
+</video>
+
+In the actual application, you can check out details of each trade by hovering over connections between players for a descriptive tooltip. Details on how paths in the trade network are created can be found in the [Appendix](#appendix).
+
+## The forrests
+We can leverage properties of networks and our scraped player data from <a href="http://basketball-reference.com/" target="_blank">Basketball Reference</a> to dig a bit deeper. In the article that inspired this whole plunge (**insert article reference**), the author describes a player as a Forrest Gump of trades. Someone involved in all these historic, landscape changing exchanges who no one has actually heard of or seen play much. Most likely getting moved around as part of the labyrinthian calculations front offices make to work within the salary cap. 
+
+How can we find these Forrest Gumps? One way is to look at the ratio of minutes played per game for a player compared to the number of trades they were involved in, the idea being we would identify players who don't play very much but get traded quite a bit. A few data-related difficulties arise in any analysis connecting using both our network and player data unfortunately. To connect the player trade data with the player statistics data, we need to match by names. Unfortunately, we cannot find a match for 362 out of the 2,257 players (16%) in our network. Additionally players with 0 minutes played are not in our player statistics data and therefore not matched with our network. For our simple average minutes per career statistic, players' minutes are aggregated as a weighted average of the minutes played per game, for a team in a season, and the number of games played for that team in that season.
+
+With all that in mind we present players since the NBA-ABA merger who played the least and got traded the most (relatively) for the three categories of positions - guard, forward, center. Players can obviously change position over time, so to (possibly over)simplify things we pick the first recorded position of the player in the data.
+
+
+``` {r echo=FALSE}
+library(DT)
+datatable(read.csv("../../static/post/bball-network-post/mpg_trade_5.csv"),
+          rownames = FALSE,
+          colnames = c("Player", "Position", "MPG over Career", "# of Trades", "# of Trades/MPG"),
+          filter = "top")
+```
+
+
+## Appendix
+
+### Scraping
+Choices made when scraping from <a href="http://prosportstransactions.com/" target="_blank">Pro Sports Transactions Database</a>:
+
+* choice 1 
+* choice 2
+
+### Path creation
+Describe bfs and your modification to it.
