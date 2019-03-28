@@ -1,2 +1,2 @@
-https://svitkin.rbind.io/*  https://svitkin.rbind.io:splat  301!
+https://svitkin.rbind.io/*  https://svitkin.rbind.io/:splat  301!
 http://svitkin.rbind.io/*   https://svitkin.rbind.io/:splat  301!
