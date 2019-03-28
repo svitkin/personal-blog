@@ -2,5 +2,17 @@
   <main id="main">
     <h1>{{ .Title }}</h1>
     {{ .Content }}
+    <br/>
+    <h3>Recent Posts</h3>
+    <ul class="patterns-list" style="padding: 5px; margin: 5px;">
+    {{ range first 3 (where .Pages.ByPublishDate.Reverse "Title" "!=" "About") }}
+      <li><a href="{{ .Permalink }}">
+            <svg class="bookmark" aria-hidden="true" viewBox="0 0 40 50" focusable="false">
+              <use xlink:href="#bookmark"></use>
+            </svg>
+            {{ .Title }}
+          </a><br /><span class="date">{{ .Date.Format "Mon, Jan 2, 2006" }}</span></li>       
+    {{ end }}
+    </ul>
   </main>
 {{ end }}
