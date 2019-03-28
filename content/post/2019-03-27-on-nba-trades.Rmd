@@ -46,21 +46,16 @@ For some later analyses, player statistics data is scraped, again since the NBA-
 The resulting network can be poked, prodded, and visualized in the application created at <a href="http://svitkin.shinyapps.io/bball-trade-network/" target="_blank">svitkin.shinyapps.io/bball-trade-network/</a>. In the app, you can see trades evolve over time, and even how players get drafted into the league, or go in and out of free agency. Let's get on with some examples!
 Check out those Vince Carter to Luke Ridnour connections again:
 
-<video width="640" height="480" style="display:block; margin: 0 auto;" controls>
-  <source src="../post/bball-network-post/vincecarter-lukeridnour.mp4" type="video/mp4">
-</video>
+<img src="../post/bball-network-post/vincecarter-lukeridnour.gif" alt="Vince Carter - Luke Ridnour Connections" style="display:block; margin-left:auto; margin-right: auto; width: 75%; height: 75%">
 
 Briefly contemplate this bizarre Lebron James and Luke Walton (his current coach) trade relationship:
 
-
-![](../post/bball-network-post/lebronjames-lukewalton.png "Lebron James - Luke Ridnour Connection")
+<img src="../post/bball-network-post/lebronjames-lukewalton.png" alt="Lebron James - Luke Walton Connection" style="display:block; margin-left:auto; margin-right: auto; width: 75%; height: 75%">
 
 
 Indulge my obsession with Eric Bledsoe, and check out connections with anyone who is related to his trades:
 
-<video width="640" height="480" style="display:block; margin: 0 auto;" controls>
-  <source src="../post/bball-network-post/ericbledsoe.mp4" type="video/mp4">
-</video>
+<img src="../post/bball-network-post/ericbledsoe.gif" alt="Eric Bledsoe Connections" style="display:block; margin-left:auto; margin-right: auto; width: 75%; height: 75%">
 
 In the application, you can find more details of each trade by hovering over connections between players. Details on how paths in the trade network are created can be found in the [Appendix](#appendix).
 
@@ -79,7 +74,7 @@ datatable(read.csv("../../static/post/bball-network-post/mpg_trade_5.csv"),
           colnames = c("Player", "Position", "MPG over Career", "# of Player Exchanges", "# of Player Exchanges/MPG"),
           filter = "top",
           options = list(pageLength = 15, autoWidth = TRUE),
-          caption = "Lowest 5 MPG to Trades Ratios per Position")
+          caption = "Lowest 5 MPG to # Players Exchanged Ratios per Position")
 ```
 
 
