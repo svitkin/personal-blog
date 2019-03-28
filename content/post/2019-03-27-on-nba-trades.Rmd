@@ -67,18 +67,18 @@ In the application, you can find more details of each trade by hovering over con
 ## The forrests
 We can leverage properties of networks and our scraped player data from <a href="http://basketball-reference.com/" target="_blank">Basketball Reference</a> to dig a bit deeper. In the <a href="https://www.theringer.com/nba/2019/1/30/18202947/nba-transaction-trees" target="_blank">article</a> that inspired this whole plunge, the author describes the player Arturas Gudaitis as a Forrest Gump of trades. Someone involved in all these historic, landscape changing exchanges who no one has actually heard of or seen play much (in Gudaitis's case, not at all). Players moved around as part of the labyrinthian calculations front offices make to work within the salary cap. 
 
-How can we find these Forrest Gumps? One way is to look at the ratio of minutes played per game for a player compared to the number of trades they were involved in, the idea being to identify players who don't play very much but get traded quite a bit. However, a few data-related difficulties arise in any analysis connecting the network and player data unfortunately. To connect the player trade data with the player statistics data, the datasets are matched by names. Unfortunately, no match is found for 362 out of the 2,257 players (16%) in the network. Additionally players with 0 minutes played (like Arturas Gudaitis) are not in the player statistics data and therefore not matched with the network. For the simple average minutes per career statistic, players' minutes are aggregated as a weighted average of the minutes played per game, for a team in a season, and the number of games played for that team in that season.
+How can we find these Forrest Gumps? One way is to look at the ratio of minutes played per game (in the regular season) for a player compared to the number of players they were exchanged for in trades, the idea being to identify players who don't play very much but were involved in large trades quite a bit. However, a few data-related difficulties arise in any analysis connecting the network and player data. To connect the player trade data with the player statistics data, the datasets are matched by names. Unfortunately, no match is found for 362 out of the 2,257 players (16%) in the network. Additionally players with 0 minutes played (like Arturas Gudaitis) are not in the player statistics data and therefore not matched with the network. For the simple average minutes per career statistic, players' minutes are aggregated as a weighted average of the minutes played per game, for a team in a season, and the number of games played for that team in that season.
 
-With all that in mind here are the players since the NBA-ABA merger who played the least and got traded the most (relatively) for the three categories of positions - guard, forward, center. Players can obviously change position over time, so to (possibly over)simplify things the first recorded position of the player in the data is used.
+With all that in mind, here are the players since the NBA-ABA merger who played the least and got traded the most (relatively) for the three categories of positions - guard, forward, center. Players can obviously change position over time, so to (possibly over)simplify things the first recorded position of the player in the data is used.
 
 
 ``` {r echo=FALSE}
 library(DT)
 datatable(read.csv("../../static/post/bball-network-post/mpg_trade_5.csv"),
           rownames = FALSE,
-          colnames = c("Player", "Position", "MPG over Career", "# of Trades", "# of Trades/MPG"),
+          colnames = c("Player", "Position", "MPG over Career", "# of Player Exchanges", "# of Player Exchanges/MPG"),
           filter = "top",
-          options = list(pageLength = 15),
+          options = list(pageLength = 15, autoWidth = TRUE),
           caption = "Lowest 5 MPG to Trades Ratios per Position")
 ```
 
@@ -88,26 +88,30 @@ datatable(read.csv("../../static/post/bball-network-post/mpg_trade_5.csv"),
 ### Scraping
 Choices made when scraping from <a href="http://prosportstransactions.com/" target="_blank">Pro Sports Transactions Database</a>:
 
-* Remove exchanges with future picks
-* Remove exchanges with non-agreements or non-exercised picks
-* Remove exchanges with unknown picks or unknown offer sheets
-* Remove exchanges where agreement to waive was involved
-* Remove exchanges where modification of pick was involved
-* When discrepancy with media guide pointed out, use information in dataset
+* Removed exchanges with future picks
+* Removed exchanges with non-agreements or non-exercised picks
+* Removed exchanges with unknown picks or unknown offer sheets
+* Removed exchanges where agreement to waive was involved
+* Removed exchanges where modification of pick was involved
+* When discrepancy with media guide pointed out, used information in dataset
 
 ### Path creation
 The original data scraped from the <a href="http://prosportstransactions.com/" target="_blank">Pro Sports Transactions Database</a>, is a network of players where a connection exists if two players were exchanged in a trade at some point in time. However, to create the visualizations from the application, time and team must be taken into account. A path between any two players must have sequential connections involving the same teams and must uniformly go forward or backward in time. 
 
 Invalid date path:
-player a &rarr; player b (2015) &rarr; player c (2014)
+
+player a &rarr; player b (2015) &rarr; player c (2014) &rarr; player d (2016)
 
 Valid date path:
-player a &rarr; player b (2015) &rarr; player c (2016)
+
+player a &rarr; player b (2015) &rarr; player c (2016) &rarr; player d (2017)
 
 Invalid team path:
+
 player a &rarr; player b (between Magic and Rockets) &rarr; player c (between Pacers and Knicks)
 
 Valid team path:
+
 player a &rarr; player b (between Magic and Rockets) &rarr; player c (between Rockets and Knicks)
 
 Both team and time need to be correct for a path to be valid. To find valid paths, a <a href="https://en.wikipedia.org/wiki/Breadth-first_search" target="_blank">breadth first search</a> is used, where each connection being searched along the network is tested for date and team validity. 
