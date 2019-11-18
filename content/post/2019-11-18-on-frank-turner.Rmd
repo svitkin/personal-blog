@@ -1,0 +1,43 @@
+---
+title: On Frank Turner
+author: ''
+date: '2019-11-18'
+slug: on-frank-turner
+categories: []
+toc: false
+tags:
+  - Frank Turner
+  - music
+  - leaflet
+  - map
+---
+
+## Getting right to it
+
+Frank Turner is one of my favorite artists and performers. His albums have been a big part of my life and his live shows are memorable experiences I'd recommend to anyone. He is also one of the hardest working touring musicians out there, having played at well over 2,000 shows since 2004. The respect he has for his craft is inspiring.
+
+His fans are also inspiring! Going off of the idea and work the user Zoe_Bee on <a href='forum.frank-turner.com' target='_blank'>forum.frank-turner.com</a> had done[^1], and using the data on his website and the mapping package leaflet, I decided to visualize all of his shows so far[^2]. So go explore! The map is completely interactive. Find the shows you were at or just marvel at the Road[^3] this man has taken throughout his career.
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+library(dplyr)
+library(leaflet)
+
+fturner_locations <- 
+  read.csv("../../csv/fturner-locations.csv",
+           stringsAsFactors = FALSE)
+
+leaflet(fturner_locations, width = '100%') %>% 
+  addTiles() %>% 
+  addMarkers(~lon, ~lat, 
+             popup = ~paste0(venue, "<br>", date_string), 
+             clusterOptions = markerClusterOptions()) 
+```
+
+## Method
+
+If you just want to check out the code, it's <a href='https://github.com/svitkin/frank-turner-map' target='_blank'>here.</a> To start, I scraped down the text containing show information from <a href='https://frank-turner.com/basic-archive/' target='_blank'>frank-turner.com/basic-archive/</a>. Then, using the Google Maps API, the venues were geocoded by the information on the website. 30 venues were unable to be geocoded. Of these, 11 were shows in International Waters that I chose to ignore[^4]. The other 19, I googled until I found a suitable candidate address to geocode with the API. The rest of the work was done by the excellent <a href='https://rstudio.github.io/leaflet/' target='_blank'>leaflet package</a> and the equally excellent <a href='https://github.com/Leaflet/Leaflet.markercluster' target='_blank'>marker cluster plugin.</a>
+
+[^1]: Zoe_Bee also created a map! It's great! They got the locations of all the venues through a collaborative process, working with other people on the forum. Go check it <a href='http://www.arcgis.com/home/webmap/viewer.html?webmap=9da0b46715104662b5f48148e394bc7b&extent=-126.3309,31.6552,-93.8772,47.4295' target='_blank'>out!</a>
+[^2]: See the Methods section for caveats. 
+[^3]: There are more elegant refrences I could have used, but I couldn't help myself.
+[^4]: I guess you could figure out the route of the cruise line the show was on, the day and time the cruise ship left, and then try to approximate where the show was based on those factors, but...that felt unnecessary.
