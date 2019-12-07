@@ -22,6 +22,7 @@ His fans are also inspiring! Going off of the idea and work the user Zoe_Bee on 
 library(widgetframe)
 library(dplyr)
 library(leaflet)
+library(leaflet.extras)
 
 fturner_locations <-
   read.csv("../../csv/fturner-locations.csv",
@@ -32,7 +33,8 @@ l <-
   addTiles() %>%
   addMarkers(~lon, ~lat,
              popup = ~paste0(venue, "<br>", date_string),
-             clusterOptions = markerClusterOptions())
+             clusterOptions = markerClusterOptions()) %>% 
+  addFullscreenControl()
 frameWidget(l, width='100%')
 ```
 
