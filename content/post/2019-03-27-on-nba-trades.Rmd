@@ -70,7 +70,7 @@ How can we find these Forrest Gumps? One way is to look at the ratio of minutes 
 With all that in mind, here are the players since the NBA-ABA merger who played the least and got traded the most (relatively) for the three categories of positions - guard, forward, center. Players can obviously change position over time, so to (possibly over)simplify things the first recorded position of the player in the data is used.
 
 <div style="font-size: 75%; width: 100%;">
-``` {r echo=FALSE}
+``` {r echo=FALSE, message=FALSE, warning=FALSE}
 library(DT)
 datatable(read.csv("../../static/post/bball-network-post/mpg_trade_5.csv"),
           rownames = FALSE,
