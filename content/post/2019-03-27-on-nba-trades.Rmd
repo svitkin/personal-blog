@@ -28,7 +28,8 @@ tags:
 
 ## The network
 NBA trades are a deep, strange rabbit hole to jump into. Their history shows exchanges between teams that don't exist anymore for players that even the most ardent fans have never heard of. Tales of woe reveal themselves in their records - star players earnestly exchanged for players history has forgotten, a future pick that would turn into a centerpiece bouncing around so many teams that missed out. Some truly bizarre decision-making begins to stand out. 
-
+\
+\
 The rabbit hole gets deeper than just a single trade though. A player's arrival on a team can be traced back considerably further than their last immediate exchange. Viewing trades between players as a continuous set of connections, you can trace how **player a** "becomes" **player d** by checking out how a trade between **player a** and **player b** connects to a trade later on between **player b** and **player c**, which in turn connects to another trade later between **player c** and **player d**. Let's ground this in an example with real players (the year of each trade is in parantheses).
 \
 \
@@ -46,7 +47,7 @@ For some later analyses, player statistics data is scraped, again since the NBA-
 
 ## The visualizations
 
-The resulting network can be poked, prodded, and visualized in the application created at <a href="http://svitkin.shinyapps.io/bball-trade-network/" target="_blank">svitkin.shinyapps.io/bball-trade-network/</a>. In the app, you can see trades evolve over time, and even how players get drafted into the league, or go in and out of free agency. Let's get on with some examples!
+The resulting network can be poked, prodded, and visualized in the application created at <a href="http://svitkin.shinyapps.io/bball-trade-network/" target="_blank">svitkin.shinyapps.io/bball-trade-network/</a>. In the app you can see trades evolve over time, watch players get drafted into the league or go in and out of free agency. Let's get on with some examples!
 Check out those Vince Carter to Luke Ridnour connections again:
 
 <img src="../post/bball-network-post/vincecarter-lukeridnour.gif" alt="Vince Carter - Luke Ridnour Connections" style="display:block; margin-left:auto; margin-right: auto; width: 75%; height: 75%">
@@ -67,7 +68,7 @@ We can leverage properties of networks and our scraped player data from <a href=
 
 How can we find these Forrest Gumps? One way is to look at the ratio of minutes played per game (in the regular season) for a player compared to the number of players they were exchanged for in trades, the idea being to identify players who don't play very much but were involved in large trades quite a bit. However, a few data-related difficulties arise in any analysis connecting the network and player data. To connect the player trade data with the player statistics data, the datasets are matched by names. Unfortunately, no match is found for 362 out of the 2,257 players (16%) in the network. Additionally players with 0 minutes played (like Arturas Gudaitis) are not in the player statistics data and therefore not matched with the network. For the simple average minutes per career statistic, players' minutes are aggregated as a weighted average of the minutes played per game, for a team in a season, and the number of games played for that team in that season.
 
-With all that in mind, here are the players since the NBA-ABA merger who played the least and got traded the most (relatively) for the three categories of positions - guard, forward, center. Players can obviously change position over time, so to (possibly over)simplify things the first recorded position of the player in the data is used.
+With all that in mind, here are the top 5 players since the NBA-ABA merger who played the least and got traded the most (relatively) for the three categories of positions - guard, forward, center. Players can obviously change position over time, so to (possibly over)simplify things the first recorded position of the player in the data is used.
 
 <div style="font-size: 75%; width: 100%;">
 ``` {r echo=FALSE, message=FALSE, warning=FALSE}
@@ -91,7 +92,7 @@ Choices made when scraping from <a href="http://prosportstransactions.com/" targ
 * Removed exchanges with unknown picks or unknown offer sheets
 * Removed exchanges where agreement to waive was involved
 * Removed exchanges where modification of pick was involved
-* When discrepancy with media guide pointed out, used information in dataset
+* When discrepancy with media guide pointed out, used information contained in Pro Sports Transaction Database instead of media guide
 
 ### Path creation
 The original data scraped from the <a href="http://prosportstransactions.com/" target="_blank">Pro Sports Transactions Database</a>, is a network of players where a connection exists if two players were exchanged in a trade at some point in time. However, to create the visualizations from the application, time and team must be taken into account. A path between any two players must have sequential connections involving the same teams and must uniformly go forward or backward in time. 
@@ -112,3 +113,5 @@ player a &rarr; player b (between Magic and Rockets) &rarr; player c (between Ro
 
 
 Both team and time need to be correct for a path to be valid. To find valid paths, a <a href="https://en.wikipedia.org/wiki/Breadth-first_search" target="_blank">breadth first search</a> is used, where each connection being searched along the network is tested for date and team validity. 
+
+All code for the project can be found at <a href="https://github.com/svitkin/bball-trade-network" target="_blank">https://github.com/svitkin/bball-trade-network</a>.
